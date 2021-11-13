@@ -29,8 +29,10 @@
         <button class="reset-button" type="button">Reset</button>
       </div>
       <div class="scores">
-        <p>Guesses left: 10</p>
-        <p>Score: 0</p>
+        <p>Guesses left:</p>
+        <p id="guesses-left">10</p>
+        <p>Score:</p>
+        <p id="scores-total">0</p>
       </div>
       <div class="main-content">
         <object
@@ -39,21 +41,23 @@
           class="hanging-man"
         ></object>
 
-        <div class="start-text difficulty">
+        <!-- <div class="start-text difficulty">
           <p>How hard do you wanna hang?</p>
           <button class="easy-button" type="button">EZ-PZ</button>
           <button class="hard-button" type="button">Kinda hard</button>
           <button class="hell-button" type="button">Fkn Hell</button>
-        </div>
-        <!-- <div class="start-text category">
-          <p>Pick a topic</p>
-          <button class="easy-button" type="button">Celebrities</button>
-          <button class="hard-button" type="button">Cities</button>
-          <button class="hell-button" type="button">Food</button>
         </div> -->
+        <div class="start-text category">
+          <p>Pick a topic</p>
+          <button class="celeb-button" type="button">Celebrities</button>
+          <button class="city-button" type="button">Cities</button>
+          <button class="food-button" type="button">Food</button>
+        </div>
       </div>
 
       <h2 class="bottom-desc">Press a key to make a guess.</h2>
     </div>
+
+    <script src="script.js"></script>
   </body>
 </html>
