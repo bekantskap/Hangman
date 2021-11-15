@@ -7,6 +7,7 @@ const answerEl = document.querySelector('.picked-word');
 const guessedEl = document.querySelector('.guessed-letter');
 const guessedcorrectEl = document.querySelector('.guessed-letter-correct');
 const hiddenEl = document.querySelector('.hidden');
+const bottomtextEl = document.querySelector('.bottom-desc');
 
 const startbtnEl = document.querySelector('.start-button');
 const resetbtnEl = document.querySelector('.reset-button');
@@ -32,6 +33,14 @@ gallowEl.addEventListener('load', function () {
 
 const groundEl = document.getElementById('ground');
 
+resetbtnEl.addEventListener('click', function () {
+  location.reload();
+});
+
+startbtnEl.addEventListener('click', function () {
+  init();
+});
+
 let score = 0;
 let remaining = 0;
 let guess,
@@ -46,6 +55,7 @@ const init = function () {
   guess = 6;
   guessEl.textContent = guess;
   remaining = 0;
+  playing = true;
 
   answerArr = [];
   guessedLetters = [];
@@ -63,49 +73,53 @@ const init = function () {
   playerguess();
 };
 
-resetbtnEl.addEventListener('click', function () {
-  location.reload();
-});
-
-startbtnEl.addEventListener('click', function () {
-  init();
-});
+const playAgain = function () {
+  bottomtextEl.textContent = 'Want to continue playing?';
+};
 
 const playerguess = function () {
-  document.addEventListener('keydown', function (event) {
-    userInput = event.key.toUpperCase();
+  if (playing) {
+    document.addEventListener('keydown', function (event) {
+      userInput = event.key.toUpperCase();
 
-    for (var i = 0; i < answerArr.length; i++) {
-      if (userInput === answer[i]) {
-        remaining++;
-        guessedLetters = userInput;
-        console.log(guessedLetters);
-        answerArr[i] = userInput;
-        answerEl.textContent = answerArr.join(' ');
+      for (var i = 0; i < answer.length; i++) {
+        if (userInput === answer[i]) {
+          remaining++;
+          guessedLetters = userInput;
+          console.log(guessedLetters);
+          answerArr[i] = userInput;
+          answerEl.textContent = answerArr.join(' ');
 
-        console.log('Guess is right');
-        console.log(answerArr);
-        console.log(`Remaining: ${remaining} `);
+          console.log('Guess is right');
+          console.log(answerArr);
+          console.log(`Remaining: ${remaining} `);
 
-        if (remaining == answerArr.length) {
-          console.log('Winner!!');
-          score += 1;
-          winsEl.textContent = score;
+          if (remaining == answerArr.length) {
+            console.log('Winner!!');
+            score += 1;
+            winsEl.textContent = score;
+            guessedEl.textContent = 'You Won GZ!!';
+            playing = false;
+            return;
+          }
+        } else if (!answer.includes(userInput)) {
+          guessedEl.textContent += userInput;
+          guess--;
+          guessEl.textContent = guess;
+          console.log('Wrong!!');
+          if (guess == 0) {
+            guessedEl.textContent = 'GAME OVER!!';
+            score++;
+            lossesEl.textContent = score;
+            answerEl.textContent = answer;
+            playing = false;
+            return;
+          }
+          break;
         }
-      } else if (!answer.includes(userInput)) {
-        guessedEl.textContent += userInput;
-        guess--;
-        guessEl.textContent = guess;
-        console.log('Wrong!!');
-        if (guess == 0) {
-          guessedEl.textContent = 'GAME OVER!!';
-          score++;
-          lossesEl.textContent = score;
-        }
-        break;
       }
-    }
-  });
+    });
+  }
 };
 
 // else {
