@@ -58,6 +58,7 @@ const init = function () {
 
   console.log(answer);
   answerEl.textContent = answerArr.join(' ');
+  guessedEl.textContent = '';
 
   playerguess();
 };
@@ -85,11 +86,23 @@ const playerguess = function () {
         console.log('Guess is right');
         console.log(answerArr);
         console.log(`Remaining: ${remaining} `);
+
         if (remaining == answerArr.length) {
           console.log('Winner!!');
           score += 1;
           winsEl.textContent = score;
         }
+      } else if (!answer.includes(userInput)) {
+        guessedEl.textContent += userInput;
+        guess--;
+        guessEl.textContent = guess;
+        console.log('Wrong!!');
+        if (guess == 0) {
+          guessedEl.textContent = 'GAME OVER!!';
+          score++;
+          lossesEl.textContent = score;
+        }
+        break;
       }
     }
   });
