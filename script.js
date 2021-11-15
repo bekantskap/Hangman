@@ -1,6 +1,7 @@
 'use strict';
 
-const scoreEl = document.querySelector('#scores-total');
+const winsEl = document.querySelector('#wins-total');
+const lossesEl = document.querySelector('#losses-total');
 const guessEl = document.querySelector('#guesses-left');
 const answerEl = document.querySelector('.picked-word');
 const guessedEl = document.querySelector('.guessed-letter');
@@ -32,24 +33,19 @@ gallowEl.addEventListener('load', function () {
 const groundEl = document.getElementById('ground');
 
 let score = 0;
-let win,
-  guess,
+let remaining = 0;
+let guess,
   guessedLetters,
   answerArr,
-  remaining,
   playing,
   answer,
   categoryPicked,
   userInput;
 
 const init = function () {
-  guess = 10;
-  score += 0;
-  scoreEl.innerHTML = score;
+  guess = 6;
   guessEl.textContent = guess;
-
-  console.log(isNaN(scoreEl.innerHTML));
-  console.log(scoreEl.innerHTML);
+  remaining = 0;
 
   answerArr = [];
   guessedLetters = [];
@@ -59,12 +55,16 @@ const init = function () {
   for (var i = 0; i < answer.length; i++) {
     answerArr[i] = '_';
   }
-  remaining = answer.length;
+
   console.log(answer);
   answerEl.textContent = answerArr.join(' ');
 
   playerguess();
 };
+
+resetbtnEl.addEventListener('click', function () {
+  location.reload();
+});
 
 startbtnEl.addEventListener('click', function () {
   init();
@@ -73,32 +73,35 @@ startbtnEl.addEventListener('click', function () {
 const playerguess = function () {
   document.addEventListener('keydown', function (event) {
     userInput = event.key.toUpperCase();
-    console.log(userInput);
+
     for (var i = 0; i < answerArr.length; i++) {
       if (userInput === answer[i]) {
-        console.log('Guess is right');
-        remaining--;
+        remaining++;
         guessedLetters = userInput;
-        // score += 1;
-        // scoreEl.textContent = score;
+        console.log(guessedLetters);
         answerArr[i] = userInput;
         answerEl.textContent = answerArr.join(' ');
+
+        console.log('Guess is right');
         console.log(answerArr);
-        if (remaining === 0) {
+        console.log(`Remaining: ${remaining} `);
+        if (remaining == answerArr.length) {
           console.log('Winner!!');
           score += 1;
-          scoreEl.textContent = score;
+          winsEl.textContent = score;
         }
-      } else {
-        console.log('Guess is wrong...');
-        guess--;
-        guessEl.textContent = guess;
-        guessedEl.textContent += userInput;
       }
     }
   });
 };
 
+// else {
+//   console.log('Guess is wrong...');
+//   guess--;
+//   guessEl.textContent = guess;
+//   guessedEl.textContent += userInput;
+//   break;
+// }
 // const difficulty = function () {
 // easybtnEl.addEventListener('click', function () {
 //   console.log('Ez mode active');
