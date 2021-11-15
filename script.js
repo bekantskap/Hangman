@@ -21,11 +21,18 @@ const cityWords = ['BANGLADESH', 'LONDON', 'PARIS'];
 const foodWords = ['Pizza', 'Burger', 'Bolognese'];
 const celebWords = ['Brad Pitt', 'Seth Rogen', 'Britney Spears'];
 
-const gallowEl = document.querySelector('.hanging-man');
+const gallowEl = document.getElementById('hanging-id');
+
+gallowEl.addEventListener('load', function () {
+  let head = gallowEl.contentDocument;
+  const headEl = head.getElementById('head');
+  headEl.classList.add('hidden');
+});
+
 const groundEl = document.getElementById('ground');
 
-let score,
-  win,
+let score = 0;
+let win,
   guess,
   guessedLetters,
   answerArr,
@@ -37,9 +44,12 @@ let score,
 
 const init = function () {
   guess = 10;
-  score = 0;
-  scoreEl.textContent = score;
+  score += 0;
+  scoreEl.innerHTML = score;
   guessEl.textContent = guess;
+
+  console.log(isNaN(scoreEl.innerHTML));
+  console.log(scoreEl.innerHTML);
 
   answerArr = [];
   guessedLetters = [];
@@ -76,8 +86,8 @@ const playerguess = function () {
         console.log(answerArr);
         if (remaining === 0) {
           console.log('Winner!!');
-          win += 1;
-          scoreEl.textContent = win;
+          score += 1;
+          scoreEl.textContent = score;
         }
       } else {
         console.log('Guess is wrong...');
