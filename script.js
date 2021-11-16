@@ -18,6 +18,7 @@ const celebbtnEl = document.querySelector('.celeb-button');
 const citybtnEl = document.querySelector('.city-button');
 const foodbtnEl = document.querySelector('.food-button');
 const difficultyEl = document.getElementById('difficulty');
+const categoryEl = document.getElementById('category');
 
 const cityWords = [
   'BANGLADESH',
@@ -30,8 +31,8 @@ const cityWords = [
   'TOKYO',
   'STOCKHOLM',
 ];
-const foodWords = ['Pizza', 'Burger', 'Bolognese'];
-const celebWords = ['Brad Pitt', 'Seth Rogen', 'Britney Spears'];
+const foodWords = ['PIZZA', 'BURGER', 'PASTA'];
+const celebWords = ['BRAD PITT', 'SETH ROGEN', 'BRITNEY SPEARS'];
 
 const gallowEl = document.querySelector('.hanging-man');
 const scaffoldEl = document.querySelector('.scaffold');
@@ -41,17 +42,21 @@ const armsEl = document.querySelector('.arms');
 const legsEl = document.querySelector('.legs');
 const groundEl = document.querySelector('.ground');
 
+difficultyEl.classList.add('hidden');
+categoryEl.classList.add('hidden');
+
 let score = 0;
 let remaining = 0;
 let loss = 0;
+let guess = 0;
 let win = 0;
-let guess,
-  correctLetters,
+let correctLetters,
+  difficultyPicked,
+  categoryPicked,
   wrongLetters,
   answerArr,
   playing,
   answer,
-  categoryPicked,
   userInput;
 
 resetbtnEl.addEventListener('click', function () {
@@ -59,67 +64,183 @@ resetbtnEl.addEventListener('click', function () {
 });
 
 startbtnEl.addEventListener('click', function () {
-  init();
+  bottomtextEl.textContent = 'Press a key to make a guess.';
+  // guessedEl.textContent = '';
+  // answerEl.textContent = '';
+  difficulty();
 });
 
-const init = function () {
-  guess = 6;
-  score = 0;
-  remaining = 0;
+const difficulty = function () {
+  difficultyEl.classList.remove('hidden');
+  easybtnEl.addEventListener('click', function () {
+    console.log('Ez mode active');
+    guess = 6;
+    guessEl.textContent = guess;
+    difficultyEl.classList.add('hidden');
+    difficultyPicked = 1;
+    categoryPick();
+  });
+  hardbtnEl.addEventListener('click', function () {
+    console.log('Hard mode activated.');
+    guess = 3;
+    guessEl.textContent = guess;
+    difficultyEl.classList.add('hidden');
+    difficultyPicked = 2;
+    categoryPick();
+  });
+  hellbtnEl.addEventListener('click', function () {
+    console.log('Holy hell..');
+    guess = 1;
+    guessEl.textContent = guess;
+    difficultyPicked = 3;
+    difficultyEl.classList.add('hidden');
+    categoryPick();
+  });
+};
 
-  playing = true;
+const categoryPick = function () {
+  categoryEl.classList.remove('hidden');
+  celebbtnEl.addEventListener('click', function () {
+    categoryPicked = 1;
+    getAnswer();
+  });
+  citybtnEl.addEventListener('click', function () {
+    categoryPicked = 2;
+    getAnswer();
+  });
+  foodbtnEl.addEventListener('click', function () {
+    categoryPicked = 3;
+    getAnswer();
+  });
+};
+
+const getAnswer = function () {
+  categoryEl.classList.add('hidden');
 
   answerArr = [];
-  correctLetters = [];
-  wrongLetters = [];
 
-  answer = cityWords[Math.floor(Math.random() * cityWords.length)];
-  for (var i = 0; i < answer.length; i++) {
-    answerArr[i] = '_';
+  switch (categoryPicked) {
+    case 1:
+      answer = celebWords[Math.floor(Math.random() * celebWords.length)];
+      for (var i = 0; i < answer.length; i++) {
+        answerArr[i] = '_';
+      }
+      break;
+    case 2:
+      answer = cityWords[Math.floor(Math.random() * cityWords.length)];
+      for (var i = 0; i < answer.length; i++) {
+        answerArr[i] = '_';
+      }
+      console.log(answer);
+      break;
+    case 3:
+      answer = foodWords[Math.floor(Math.random() * foodWords.length)];
+      for (var i = 0; i < answer.length; i++) {
+        answerArr[i] = '_';
+      }
+      console.log(answer);
+      break;
   }
-
   answerEl.textContent = answerArr.join(' ');
   guessedEl.textContent = '';
-  guessEl.textContent = guess;
-  bottomtextEl.textContent = 'Press a key to make a guess.';
+  init();
+};
 
+const init = function () {
+  score = 0;
+  remaining = 0;
+  playing = true;
+  correctLetters = [];
+  wrongLetters = [];
   document.removeEventListener('keydown', function (event) {});
   hideLimbs();
   playerguess();
-
   // console.log(answer);
 };
 
 const hideLimbs = function () {
-  groundEl.classList.add('hidden');
-  scaffoldEl.classList.add('hidden');
-  headEl.classList.add('hidden');
-  bodyEl.classList.add('hidden');
-  armsEl.classList.add('hidden');
-  legsEl.classList.add('hidden');
-};
-const showLimbs = function () {
-  switch (guess) {
-    case 6:
-      groundEl.classList.remove('hidden');
-      break;
-    case 5:
-      headEl.classList.remove('hidden');
-      break;
-    case 4:
-      scaffoldEl.classList.remove('hidden');
-      break;
-    case 3:
-      legsEl.classList.remove('hidden');
+  switch (difficultyPicked) {
+    case 1:
+      groundEl.classList.add('hidden');
+      scaffoldEl.classList.add('hidden');
+      headEl.classList.add('hidden');
+      bodyEl.classList.add('hidden');
+      armsEl.classList.add('hidden');
+      legsEl.classList.add('hidden');
       break;
     case 2:
-      armsEl.classList.remove('hidden');
+      groundEl.classList.remove('hidden');
+      headEl.classList.remove('hidden');
+      scaffoldEl.classList.remove('hidden');
+      bodyEl.classList.add('hidden');
+      legsEl.classList.add('hidden');
+      armsEl.classList.add('hidden');
       break;
-    case 1:
-      bodyEl.classList.remove('hidden');
-      break;
+    case 3:
+      headEl.classList.remove('hidden');
+      groundEl.classList.remove('hidden');
+      scaffoldEl.classList.add('hidden');
+      bodyEl.classList.add('hidden');
+      legsEl.classList.add('hidden');
+      armsEl.classList.add('hidden');
+  }
+};
+const showLimbs = function () {
+  if (difficultyPicked == 1) {
+    console.log('EZ body should show here');
+    switch (guess) {
+      case 6:
+        groundEl.classList.remove('hidden');
+        break;
+      case 5:
+        headEl.classList.remove('hidden');
+        break;
+      case 4:
+        scaffoldEl.classList.remove('hidden');
+        break;
+      case 3:
+        legsEl.classList.remove('hidden');
+        break;
+      case 2:
+        armsEl.classList.remove('hidden');
+        break;
+      case 1:
+        bodyEl.classList.remove('hidden');
+        break;
 
-    default:
+      default:
+    }
+  }
+  if (difficultyPicked == 2) {
+    console.log('HARD body should show here');
+
+    switch (guess) {
+      case 3:
+        legsEl.classList.remove('hidden');
+        break;
+      case 2:
+        armsEl.classList.remove('hidden');
+        break;
+      case 1:
+        bodyEl.classList.remove('hidden');
+        break;
+
+      default:
+    }
+  }
+  if (difficultyPicked == 3) {
+    console.log('Hell body should show here');
+    switch (guess) {
+      case 1:
+        console.log('Hell switch enetered.');
+        scaffoldEl.classList.remove('hidden');
+        bodyEl.classList.remove('hidden');
+        legsEl.classList.remove('hidden');
+        armsEl.classList.remove('hidden');
+        break;
+
+      default:
+    }
   }
 };
 
@@ -153,9 +274,9 @@ const playerguess = function () {
           } else if (!answer.includes(userInput) && playing) {
             wrongLetters.push(userInput);
             guessedEl.textContent = wrongLetters.join(' ');
+            showLimbs();
             guess--;
             guessEl.textContent = guess;
-            showLimbs();
             // console.log('Wrong!!');
             if (guess == 0) {
               score++;
@@ -172,32 +293,6 @@ const playerguess = function () {
     });
   }
 };
-
-// else {
-//   console.log('Guess is wrong...');
-//   guess--;
-//   guessEl.textContent = guess;
-//   guessedEl.textContent += userInput;
-//   break;
-// }
-// const difficulty = function () {
-// easybtnEl.addEventListener('click', function () {
-//   console.log('Ez mode active');
-//   guessEl.textContent = 10;
-//   guessEl.textContent = guess;
-//   init();
-// });
-// hardbtnEl.addEventListener('click', function () {
-//   console.log('Hard mode activated.');
-//   guessEl.textContent = 5;
-//   guessEl.textContent = guess;
-// });
-// hellbtnEl.addEventListener('click', function () {
-//   console.log('Holy hell..');
-//   guessEl.textContent = 1;
-//   guessEl.textContent = guess;
-// });
-// };
 
 // const hangman = function () {
 //   randomize();
