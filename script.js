@@ -19,30 +19,32 @@ const citybtnEl = document.querySelector('.city-button');
 const foodbtnEl = document.querySelector('.food-button');
 const difficultyEl = document.getElementById('difficulty');
 
-const cityWords = ['BANGLADESH', 'LONDON', 'PARIS'];
+const cityWords = [
+  'BANGLADESH',
+  'LONDON',
+  'PARIS',
+  'NEW YORK',
+  'NEW DELHI',
+  'GÖTEBORG',
+  'CHICAGO',
+  'TOKYO',
+  'STOCKHOLM',
+];
 const foodWords = ['Pizza', 'Burger', 'Bolognese'];
 const celebWords = ['Brad Pitt', 'Seth Rogen', 'Britney Spears'];
 
-const gallowEl = document.getElementById('hanging-id');
-
-gallowEl.addEventListener('load', function () {
-  let head = gallowEl.contentDocument;
-  const headEl = head.getElementById('head');
-  headEl.classList.add('hidden');
-});
-
-const groundEl = document.getElementById('ground');
-
-resetbtnEl.addEventListener('click', function () {
-  location.reload();
-});
-
-startbtnEl.addEventListener('click', function () {
-  init();
-});
+const gallowEl = document.querySelector('.hanging-man');
+const scaffoldEl = document.querySelector('.scaffold');
+const headEl = document.querySelector('.head');
+const bodyEl = document.querySelector('.body');
+const armsEl = document.querySelector('.arms');
+const legsEl = document.querySelector('.legs');
+const groundEl = document.querySelector('.ground');
 
 let score = 0;
 let remaining = 0;
+let loss = 0;
+let win = 0;
 let guess,
   correctLetters,
   wrongLetters,
@@ -52,33 +54,73 @@ let guess,
   categoryPicked,
   userInput;
 
+resetbtnEl.addEventListener('click', function () {
+  location.reload();
+});
+
+startbtnEl.addEventListener('click', function () {
+  init();
+});
+
 const init = function () {
   guess = 6;
-  guessEl.textContent = guess;
+  score = 0;
   remaining = 0;
-  playing = true;
 
-  document.removeEventListener('keydown', function (event) {});
+  playing = true;
 
   answerArr = [];
   correctLetters = [];
   wrongLetters = [];
 
   answer = cityWords[Math.floor(Math.random() * cityWords.length)];
-
   for (var i = 0; i < answer.length; i++) {
     answerArr[i] = '_';
   }
 
-  console.log(answer);
   answerEl.textContent = answerArr.join(' ');
   guessedEl.textContent = '';
+  guessEl.textContent = guess;
+  bottomtextEl.textContent = 'Press a key to make a guess.';
 
+  document.removeEventListener('keydown', function (event) {});
+  hideLimbs();
   playerguess();
+
+  // console.log(answer);
 };
 
-const playAgain = function () {
-  bottomtextEl.textContent = 'Want to continue playing?';
+const hideLimbs = function () {
+  groundEl.classList.add('hidden');
+  scaffoldEl.classList.add('hidden');
+  headEl.classList.add('hidden');
+  bodyEl.classList.add('hidden');
+  armsEl.classList.add('hidden');
+  legsEl.classList.add('hidden');
+};
+const showLimbs = function () {
+  switch (guess) {
+    case 6:
+      groundEl.classList.remove('hidden');
+      break;
+    case 5:
+      headEl.classList.remove('hidden');
+      break;
+    case 4:
+      scaffoldEl.classList.remove('hidden');
+      break;
+    case 3:
+      legsEl.classList.remove('hidden');
+      break;
+    case 2:
+      armsEl.classList.remove('hidden');
+      break;
+    case 1:
+      bodyEl.classList.remove('hidden');
+      break;
+
+    default:
+  }
 };
 
 const playerguess = function () {
@@ -89,38 +131,39 @@ const playerguess = function () {
         !wrongLetters.includes(userInput) &&
         !correctLetters.includes(userInput)
       ) {
-        console.log(`CORRECT: ${correctLetters}`);
-        console.log(`WRONG: ${wrongLetters}`);
         for (var i = 0; i < answer.length; i++) {
-          if (userInput === answer[i]) {
+          if (userInput === answer[i] && playing) {
             remaining++;
             correctLetters[i] = userInput;
             answerArr[i] = userInput;
             answerEl.textContent = answerArr.join(' ');
 
-            console.log('Guess is right');
-            console.log(answerArr);
-            console.log(`Remaining: ${remaining} `);
+            // console.log('Guess is right');
+            // console.log(answerArr);
+            // console.log(`Remaining: ${remaining} `);
 
             if (remaining == answerArr.length) {
-              console.log('Winner!!');
-              score += 1;
-              winsEl.textContent = score;
-              guessedEl.textContent = 'You Won GZ!!';
+              score++;
+              win += score;
+              winsEl.textContent = win;
               playing = false;
+              bottomtextEl.textContent = 'You Won GZ!!';
+              // console.log('Winner!!');
             }
-          } else if (!answer.includes(userInput)) {
-            wrongLetters[i] = userInput;
-            guessedEl.textContent = wrongLetters;
+          } else if (!answer.includes(userInput) && playing) {
+            wrongLetters.push(userInput);
+            guessedEl.textContent = wrongLetters.join(' ');
             guess--;
             guessEl.textContent = guess;
-            console.log('Wrong!!');
+            showLimbs();
+            // console.log('Wrong!!');
             if (guess == 0) {
-              guessedEl.textContent = 'GAME OVER!!';
               score++;
-              lossesEl.textContent = score;
+              loss += score;
+              lossesEl.textContent = loss;
               answerEl.textContent = answer;
               playing = false;
+              bottomtextEl.textContent = 'GAME OVER!!';
             }
             break;
           }
