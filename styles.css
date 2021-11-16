@@ -4,7 +4,8 @@ html {
   display: block;
 }
 h1,
-h2 {
+h2,
+h3 {
   font-family: 'Mochiy Pop P One', sans-serif;
 }
 a,
@@ -33,6 +34,7 @@ body {
     #e28300,
     #e17600
   );
+  border-radius: 1em;
   height: 90%;
   width: 90%;
   margin: 0 auto;
@@ -42,6 +44,7 @@ body {
   font-size: 4.5em;
   opacity: 0.8;
   display: flex;
+  align-content: center;
   justify-content: center;
 }
 .header h1 span {
@@ -111,6 +114,10 @@ button:active {
   justify-content: center;
 }
 
+.timer-bar {
+  display: flex;
+  justify-content: center;
+}
 .bottom-desc {
   display: flex;
   justify-content: center;
@@ -127,4 +134,26 @@ button:active {
 
 .show {
   display: contents;
+}
+
+.right-answer {
+  background-image: linear-gradient(
+    to right top,
+    #1f8c08,
+    #23a808,
+    #27c406,
+    #2ae104,
+    #2cff00
+  );
+}
+
+.wrong-answer {
+  background-image: linear-gradient(
+    to right top,
+    #dc2323,
+    #e51e1e,
+    #ee1917,
+    #f7120d,
+    #ff0a00
+  );
 }
