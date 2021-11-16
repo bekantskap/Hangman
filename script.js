@@ -44,7 +44,8 @@ startbtnEl.addEventListener('click', function () {
 let score = 0;
 let remaining = 0;
 let guess,
-  guessedLetters,
+  correctLetters,
+  wrongLetters,
   answerArr,
   playing,
   answer,
@@ -57,8 +58,11 @@ const init = function () {
   remaining = 0;
   playing = true;
 
+  document.removeEventListener('keydown', function (event) {});
+
   answerArr = [];
-  guessedLetters = [];
+  correctLetters = [];
+  wrongLetters = [];
 
   answer = cityWords[Math.floor(Math.random() * cityWords.length)];
 
@@ -81,41 +85,45 @@ const playerguess = function () {
   if (playing) {
     document.addEventListener('keydown', function (event) {
       userInput = event.key.toUpperCase();
+      if (
+        !wrongLetters.includes(userInput) &&
+        !correctLetters.includes(userInput)
+      ) {
+        console.log(`CORRECT: ${correctLetters}`);
+        console.log(`WRONG: ${wrongLetters}`);
+        for (var i = 0; i < answer.length; i++) {
+          if (userInput === answer[i]) {
+            remaining++;
+            correctLetters[i] = userInput;
+            answerArr[i] = userInput;
+            answerEl.textContent = answerArr.join(' ');
 
-      for (var i = 0; i < answer.length; i++) {
-        if (userInput === answer[i]) {
-          remaining++;
-          guessedLetters = userInput;
-          console.log(guessedLetters);
-          answerArr[i] = userInput;
-          answerEl.textContent = answerArr.join(' ');
+            console.log('Guess is right');
+            console.log(answerArr);
+            console.log(`Remaining: ${remaining} `);
 
-          console.log('Guess is right');
-          console.log(answerArr);
-          console.log(`Remaining: ${remaining} `);
-
-          if (remaining == answerArr.length) {
-            console.log('Winner!!');
-            score += 1;
-            winsEl.textContent = score;
-            guessedEl.textContent = 'You Won GZ!!';
-            playing = false;
-            return;
+            if (remaining == answerArr.length) {
+              console.log('Winner!!');
+              score += 1;
+              winsEl.textContent = score;
+              guessedEl.textContent = 'You Won GZ!!';
+              playing = false;
+            }
+          } else if (!answer.includes(userInput)) {
+            wrongLetters[i] = userInput;
+            guessedEl.textContent = wrongLetters;
+            guess--;
+            guessEl.textContent = guess;
+            console.log('Wrong!!');
+            if (guess == 0) {
+              guessedEl.textContent = 'GAME OVER!!';
+              score++;
+              lossesEl.textContent = score;
+              answerEl.textContent = answer;
+              playing = false;
+            }
+            break;
           }
-        } else if (!answer.includes(userInput)) {
-          guessedEl.textContent += userInput;
-          guess--;
-          guessEl.textContent = guess;
-          console.log('Wrong!!');
-          if (guess == 0) {
-            guessedEl.textContent = 'GAME OVER!!';
-            score++;
-            lossesEl.textContent = score;
-            answerEl.textContent = answer;
-            playing = false;
-            return;
-          }
-          break;
         }
       }
     });
