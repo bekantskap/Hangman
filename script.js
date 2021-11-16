@@ -12,6 +12,7 @@ const bottomtextEl = document.querySelector('.bottom-desc');
 const containerEL = document.querySelector('.container');
 const scoresEl = document.querySelector('.scores');
 const timerEL = document.querySelector('.countdown');
+const hintEl = document.querySelector('.word-hint');
 
 const startbtnEl = document.querySelector('.start-button');
 const resetbtnEl = document.querySelector('.reset-button');
@@ -111,7 +112,6 @@ resetbtnEl.classList.add('hidden');
 difficultyEl.classList.add('hidden');
 categoryEl.classList.add('hidden');
 scoresEl.classList.add('hidden');
-gallowEl.classList.add('hidden');
 
 let score = 0;
 let remaining = 0;
@@ -136,26 +136,28 @@ startbtnEl.addEventListener('click', function () {
   guessedEl.textContent = '';
   answerEl.textContent = '';
   categorytextEl.textContent = '';
-  difficulty();
+  hintEl.textContent = '';
   categoryEl.classList.add('hidden');
   containerEL.classList.remove('right-answer');
   containerEL.classList.remove('wrong-answer');
-  gallowEl.classList.remove('hidden');
   resetbtnEl.classList.remove('hidden');
+  gallowEl.classList.add('hidden');
+  difficulty();
 });
 
-const timer = function () {
-  var timeleft = 30;
-  var downloadTimer = setInterval(function () {
-    if (timeleft <= 0) {
-      clearInterval(downloadTimer);
-    }
-    document.getElementById('progressBar').value = 10 - timeleft;
-    timeleft -= 1;
-  }, 1000);
-};
+// const timer = function () {
+//   var timeleft = 30;
+//   var downloadTimer = setInterval(function () {
+//     if (timeleft <= 0) {
+//       clearInterval(downloadTimer);
+//     }
+//     document.getElementById('progressBar').value = 10 - timeleft;
+//     timeleft -= 1;
+//   }, 1000);
+// };
 
 const difficulty = function () {
+  startbtnEl.classList.add('hidden');
   difficultyEl.classList.remove('hidden');
   easybtnEl.addEventListener('click', function () {
     guess = 6;
@@ -244,6 +246,7 @@ const init = function () {
 };
 
 const hideLimbs = function () {
+  gallowEl.classList.remove('hidden');
   switch (difficultyPicked) {
     case 1:
       groundEl.classList.add('hidden');
@@ -286,6 +289,17 @@ const showLimbs = function () {
         legsEl.classList.remove('hidden');
         break;
       case 2:
+        switch (answer) {
+          case 'PIZZA':
+            hintEl.textContent = 'Its really good with mozzarella...';
+            break;
+          case 'BURGER':
+            hintEl.textContent = 'Its really good with american cheese...';
+            break;
+          case 'PASTA':
+            hintEl.textContent = 'Its really good with parmesan...';
+            break;
+        }
         armsEl.classList.remove('hidden');
         break;
       case 1:
@@ -325,7 +339,6 @@ const showLimbs = function () {
 };
 
 const playerguess = function () {
-  timer();
   if (playing) {
     document.addEventListener('keydown', function (event) {
       if (!alphabet.includes(event.key)) {
@@ -349,8 +362,9 @@ const playerguess = function () {
                 win += score;
                 winsEl.textContent = win;
                 playing = false;
-                bottomtextEl.textContent = 'You Won GRATZ!!';
+                bottomtextEl.textContent = 'You Won. GRATZ!!';
                 containerEL.classList.add('right-answer');
+                startbtnEl.classList.remove('hidden');
               }
             } else if (!answer.includes(userInput) && playing) {
               wrongLetters.push(userInput);
@@ -367,6 +381,7 @@ const playerguess = function () {
                 playing = false;
                 bottomtextEl.textContent = 'GAME OVER!!';
                 containerEL.classList.add('wrong-answer');
+                startbtnEl.classList.remove('hidden');
               }
               break;
             }
