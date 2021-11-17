@@ -42,16 +42,16 @@ const cityWords = [
   'BANGLADESH',
   'LONDON',
   'PARIS',
-  'NEW YORK',
-  'NEW DELHI',
+  'LANDSKRONA',
+  'LIVERPOOL',
   'GÖTEBORG',
   'CHICAGO',
   'TOKYO',
   'STOCKHOLM',
 ];
 const foodWords = ['PIZZA', 'BURGER', 'PASTA'];
-const celebWords = ['BRAD PITT', 'SETH ROGEN', 'BRITNEY SPEARS'];
-const alphabet = [
+const celebWords = ['BEYONCE', 'EMINEM', 'CHER', 'MADONNA'];
+const allowedChars = [
   ' ',
   'A',
   'B',
@@ -127,10 +127,11 @@ let correctLetters,
   answer,
   userInput;
 
+// RESET
 resetbtnEl.addEventListener('click', function () {
   location.reload();
 });
-
+//START
 startbtnEl.addEventListener('click', function () {
   bottomtextEl.textContent = '';
   guessedEl.textContent = '';
@@ -145,6 +146,7 @@ startbtnEl.addEventListener('click', function () {
   difficulty();
 });
 
+//INITIALIZER
 const init = function () {
   score = 0;
   remaining = 0;
@@ -157,6 +159,7 @@ const init = function () {
   playerguess();
 };
 
+//CHOOSES DIFFICULTY
 const difficulty = function () {
   startbtnEl.classList.add('hidden');
   difficultyEl.classList.remove('hidden');
@@ -178,6 +181,7 @@ const difficultyValues = function (guessValue, difficultyValue) {
   categoryPick();
 };
 
+//CHOOSES CATEGORY
 const categoryPick = function () {
   scoresEl.classList.remove('hidden');
   categoryEl.classList.remove('hidden');
@@ -192,6 +196,7 @@ const categoryPick = function () {
   });
 };
 
+//RANDOMIZE AND GET ANSWER FROM ARRAY
 const getAnswer = function (categoryPicked) {
   categoryEl.classList.add('hidden');
   answerArr = [];
@@ -223,6 +228,7 @@ const getAnswer = function (categoryPicked) {
   init();
 };
 
+//HIDE BODYPARTS
 const hideLimbs = function () {
   gallowEl.classList.remove('hidden');
   switch (difficultyPicked) {
@@ -251,6 +257,8 @@ const hideLimbs = function () {
       armsEl.classList.add('hidden');
   }
 };
+
+//SHOW BODYPARTS
 const showLimbs = function () {
   if (difficultyPicked == 1) {
     switch (guess) {
@@ -306,6 +314,7 @@ const showLimbs = function () {
   }
 };
 
+//GET HINTS IF PLAYER FAILS AN X AMOUNT OF GUESSES
 const getHints = function () {
   switch (answer) {
     case 'PIZZA':
@@ -320,10 +329,11 @@ const getHints = function () {
   }
 };
 
+//GET PLAYERGUESS AND CHECK AGAINST ANSWER
 const playerguess = function () {
   if (playing) {
     document.addEventListener('keydown', function (event) {
-      if (!alphabet.includes(event.key)) {
+      if (!allowedChars.includes(event.key)) {
         console.log('Character not allowed');
       } else {
         userInput = event.key.toUpperCase();
