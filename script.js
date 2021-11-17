@@ -8,10 +8,13 @@ const categorytextEl = document.querySelector('.picked-category');
 const guessedEl = document.querySelector('.guessed-letter');
 const guessedcorrectEl = document.querySelector('.guessed-letter-correct');
 const hiddenEl = document.querySelector('.hidden');
-const bottomtextEl = document.querySelector('.bottom-desc');
 const containerEL = document.querySelector('.container');
 const scoresEl = document.querySelector('.scores');
 const timerEL = document.querySelector('.countdown');
+const hintEl = document.querySelector('.word-hint');
+const difficultyEl = document.getElementById('difficulty');
+const categoryEl = document.getElementById('category');
+const bottomtextEl = document.querySelector('.bottom-desc');
 
 const startbtnEl = document.querySelector('.start-button');
 const resetbtnEl = document.querySelector('.reset-button');
@@ -21,8 +24,14 @@ const hellbtnEl = document.querySelector('.hell-button');
 const celebbtnEl = document.querySelector('.celeb-button');
 const citybtnEl = document.querySelector('.city-button');
 const foodbtnEl = document.querySelector('.food-button');
-const difficultyEl = document.getElementById('difficulty');
-const categoryEl = document.getElementById('category');
+
+const gallowEl = document.querySelector('.hanging-man');
+const scaffoldEl = document.querySelector('.scaffold');
+const headEl = document.querySelector('.head');
+const bodyEl = document.querySelector('.body');
+const armsEl = document.querySelector('.arms');
+const legsEl = document.querySelector('.legs');
+const groundEl = document.querySelector('.ground');
 
 const cityWords = [
   'BANGLADESH',
@@ -99,19 +108,10 @@ const alphabet = [
   'Ö',
 ];
 
-const gallowEl = document.querySelector('.hanging-man');
-const scaffoldEl = document.querySelector('.scaffold');
-const headEl = document.querySelector('.head');
-const bodyEl = document.querySelector('.body');
-const armsEl = document.querySelector('.arms');
-const legsEl = document.querySelector('.legs');
-const groundEl = document.querySelector('.ground');
-
 resetbtnEl.classList.add('hidden');
 difficultyEl.classList.add('hidden');
 categoryEl.classList.add('hidden');
 scoresEl.classList.add('hidden');
-gallowEl.classList.add('hidden');
 
 let score = 0;
 let remaining = 0;
@@ -136,76 +136,56 @@ startbtnEl.addEventListener('click', function () {
   guessedEl.textContent = '';
   answerEl.textContent = '';
   categorytextEl.textContent = '';
-  difficulty();
+  hintEl.textContent = '';
   categoryEl.classList.add('hidden');
   containerEL.classList.remove('right-answer');
   containerEL.classList.remove('wrong-answer');
-  gallowEl.classList.remove('hidden');
   resetbtnEl.classList.remove('hidden');
+  gallowEl.classList.add('hidden');
+  difficulty();
 });
 
-const timer = function () {
-  var timeleft = 30;
-  var downloadTimer = setInterval(function () {
-    if (timeleft <= 0) {
-      clearInterval(downloadTimer);
-    }
-    document.getElementById('progressBar').value = 10 - timeleft;
-    timeleft -= 1;
-  }, 1000);
-};
-
 const difficulty = function () {
+  startbtnEl.classList.add('hidden');
   difficultyEl.classList.remove('hidden');
   easybtnEl.addEventListener('click', function () {
-    guess = 6;
-    guessEl.textContent = guess;
-    difficultyEl.classList.add('hidden');
-    difficultyPicked = 1;
-    categoryPick();
+    difficultyValues(6, 1);
   });
   hardbtnEl.addEventListener('click', function () {
-    guess = 3;
-    guessEl.textContent = guess;
-    difficultyEl.classList.add('hidden');
-    difficultyPicked = 2;
-    categoryPick();
+    difficultyValues(3, 2);
   });
   hellbtnEl.addEventListener('click', function () {
-    guess = 1;
-    guessEl.textContent = guess;
-    difficultyPicked = 3;
-    difficultyEl.classList.add('hidden');
-    categoryPick();
+    difficultyValues(1, 3);
   });
+};
+const difficultyValues = function (guessValue, difficultyValue) {
+  guess = guessValue;
+  guessEl.textContent = guess;
+  difficultyEl.classList.add('hidden');
+  difficultyPicked = difficultyValue;
+  categoryPick();
 };
 
 const categoryPick = function () {
   scoresEl.classList.remove('hidden');
   categoryEl.classList.remove('hidden');
   celebbtnEl.addEventListener('click', function () {
-    categoryPicked = 1;
-    getAnswer();
+    getAnswer(1);
   });
   citybtnEl.addEventListener('click', function () {
-    categoryPicked = 2;
-    getAnswer();
+    getAnswer(2);
   });
   foodbtnEl.addEventListener('click', function () {
-    categoryPicked = 3;
-    getAnswer();
+    getAnswer(3);
   });
 };
 
-const getAnswer = function () {
+const getAnswer = function (categoryPicked) {
   categoryEl.classList.add('hidden');
-
   answerArr = [];
-
   switch (categoryPicked) {
     case 1:
       answer = celebWords[Math.floor(Math.random() * celebWords.length)];
-
       for (var i = 0; i < answer.length; i++) {
         answerArr[i] = '_';
       }
@@ -244,6 +224,7 @@ const init = function () {
 };
 
 const hideLimbs = function () {
+  gallowEl.classList.remove('hidden');
   switch (difficultyPicked) {
     case 1:
       groundEl.classList.add('hidden');
@@ -286,6 +267,7 @@ const showLimbs = function () {
         legsEl.classList.remove('hidden');
         break;
       case 2:
+        getHints();
         armsEl.classList.remove('hidden');
         break;
       case 1:
@@ -324,8 +306,21 @@ const showLimbs = function () {
   }
 };
 
+const getHints = function () {
+  switch (answer) {
+    case 'PIZZA':
+      hintEl.textContent = 'Its really good with mozzarella...';
+      break;
+    case 'BURGER':
+      hintEl.textContent = 'Its really good with american cheese...';
+      break;
+    case 'PASTA':
+      hintEl.textContent = 'Its really good with parmesan...';
+      break;
+  }
+};
+
 const playerguess = function () {
-  timer();
   if (playing) {
     document.addEventListener('keydown', function (event) {
       if (!alphabet.includes(event.key)) {
@@ -349,8 +344,9 @@ const playerguess = function () {
                 win += score;
                 winsEl.textContent = win;
                 playing = false;
-                bottomtextEl.textContent = 'You Won GRATZ!!';
+                bottomtextEl.textContent = 'You Won. GRATZ!!';
                 containerEL.classList.add('right-answer');
+                startbtnEl.classList.remove('hidden');
               }
             } else if (!answer.includes(userInput) && playing) {
               wrongLetters.push(userInput);
@@ -358,7 +354,6 @@ const playerguess = function () {
               showLimbs();
               guess--;
               guessEl.textContent = guess;
-
               if (guess == 0) {
                 score++;
                 loss += score;
@@ -367,6 +362,7 @@ const playerguess = function () {
                 playing = false;
                 bottomtextEl.textContent = 'GAME OVER!!';
                 containerEL.classList.add('wrong-answer');
+                startbtnEl.classList.remove('hidden');
               }
               break;
             }
