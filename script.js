@@ -33,6 +33,11 @@ const armsEl = document.querySelector('.arms');
 const legsEl = document.querySelector('.legs');
 const groundEl = document.querySelector('.ground');
 
+resetbtnEl.classList.add('hidden');
+difficultyEl.classList.add('hidden');
+categoryEl.classList.add('hidden');
+scoresEl.classList.add('hidden');
+
 const cityWords = [
   'BANGLADESH',
   'LONDON',
@@ -108,11 +113,6 @@ const alphabet = [
   'Ö',
 ];
 
-resetbtnEl.classList.add('hidden');
-difficultyEl.classList.add('hidden');
-categoryEl.classList.add('hidden');
-scoresEl.classList.add('hidden');
-
 let score = 0;
 let remaining = 0;
 let loss = 0;
@@ -144,6 +144,18 @@ startbtnEl.addEventListener('click', function () {
   gallowEl.classList.add('hidden');
   difficulty();
 });
+
+const init = function () {
+  score = 0;
+  remaining = 0;
+  playing = true;
+  correctLetters = [];
+  wrongLetters = [];
+  document.removeEventListener('keydown', function (event) {});
+  bottomtextEl.textContent = 'Press a key to make a guess.';
+  hideLimbs();
+  playerguess();
+};
 
 const difficulty = function () {
   startbtnEl.classList.add('hidden');
@@ -209,18 +221,6 @@ const getAnswer = function (categoryPicked) {
   answerEl.textContent = answerArr.join(' ');
   guessedEl.textContent = '';
   init();
-};
-
-const init = function () {
-  score = 0;
-  remaining = 0;
-  playing = true;
-  correctLetters = [];
-  wrongLetters = [];
-  document.removeEventListener('keydown', function (event) {});
-  bottomtextEl.textContent = 'Press a key to make a guess.';
-  hideLimbs();
-  playerguess();
 };
 
 const hideLimbs = function () {
@@ -327,7 +327,6 @@ const playerguess = function () {
         console.log('Character not allowed');
       } else {
         userInput = event.key.toUpperCase();
-
         if (
           !wrongLetters.includes(userInput) &&
           !correctLetters.includes(userInput)
